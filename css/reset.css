@@ -6,6 +6,11 @@ margin: 0;
 padding: 0;
 }
 
+body {
+line-height: 1.5;
+font-family:"ËÎÌו";
+}
+
 fieldset, img {
 border: 0;
 }
@@ -45,10 +50,6 @@ font-size: 100%;
 
 input, button, textarea, select {
 *font-size: 100%;
-}
-
-body {
-line-height: 1.5;
 }
 
 ol, ul {
