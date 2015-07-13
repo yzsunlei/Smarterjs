@@ -18,7 +18,7 @@ var Base = {
 }
  */
 
-/* 
+/*
 //函数式对象写法,实现连缀
 
 //var a = function(){}
@@ -105,6 +105,174 @@ Base.prototype.html = function(str){
     return this;
 }
  */
+
+ 
+//基础库定义--将所有方法置于外面
+function Base(oneElements){
+    //存放获取的节点数组
+    this.elements = [];
+    if(oneElements != undefined){
+        this.elements[0] = oneElements;
+    }
+}
+//简化调用
+var $ = function(oneElements){
+    return new Base(oneElements);
+}
+//通过ID获取元素
+Base.prototype.getId = function(id){
+    this.elements.push(document.getElementById(id));
+    return this;
+}
+//通过标签名获取元素
+Base.prototype.getTag = function(tag){
+    var tags = document.getElementsByTagName(tag);
+    for(var i=0;i<tags.length;i++){
+        this.elements.push(tags[i]);
+    }
+    return this;
+}
+//通过元素名称获取元素
+Base.prototype.getName = function(name){
+    var names = document.getElementsByName(name);
+    for(var i=0;i<names.length;i++){
+        this.elements.push(names[i]);
+    }
+    return this;
+}
+//通过类名获取元素
+Base.prototype.getClass = function(className,idName){
+    var node = null;
+    if(arguments.length == 2){
+        node = document.getElementById(idName);
+    }else{
+        node = document;
+    }
+    var all = node.getElementsByTagName('*');
+    for(var i=0;i<all.length;i++){
+        if(all[i].className == className){
+            this.elements.push(all[i]);
+        }
+    }
+    return this;
+}
+//通过元素数组序号获取单个元素
+Base.prototype.getElement = function(num){
+    var element = this.elements[num];
+    this.elements = [];
+    this.elements[0] = element;
+    return this;
+}
+//鼠标左键单击方法
+Base.prototype.click = function(fn){
+    for(var i=0;i<this.elements.length;i++){
+        this.elements[i].onclick = fn;
+    }
+    return this;
+}
+//css设置和获取方法
+Base.prototype.css = function(attr,value){
+    for(var i=0;i<this.elements.length;i++){
+        if(arguments.length == 1){
+            if(typeof window.getComputedStyle != 'undefined'){
+                return window.getComputedStyle(this.elements[i],null)[attr];
+            }else if(typeof this.elements[i].currentStyle !='undefined'){
+                return this.elements[i].currentStyle(attr);
+            }
+        }else{
+            this.elements[i].style[attr] = value;    
+        }
+    }
+    return this;
+}
+//元素内部HTML设置和获取
+Base.prototype.html = function(str){
+    for(var i=0;i<this.elements.length;i++){
+        if(arguments.length == 0){
+            return this.elements[i].innerHTML;
+        }else{
+            this.elements[i].innerHTML = str;
+        }
+    }
+    return this;
+}
+//元素添加类名
+Base.prototype.addClass = function(className){
+    for(var i=0;i<this.elements.length;i++){
+        if(!this.elements[i].className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'))){
+            this.elements[i].className += ' ' + className;
+        }
+    }
+    return this;
+}
+//元素移除类名
+Base.prototype.removeClass = function(className){
+    for(var i=0;i<this.elements.length;i++){
+        if(this.elements[i].className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'))){
+            this.elements[i].className = this.elements[i].className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),'');
+        }
+    }
+    return this;
+}
+//设置显示
+Base.prototype.show = function(className){
+    for(var i=0;i<this.elements.length;i++){
+        this.elements[i].style.display = 'block';
+    }
+    return this;
+}
+//设置隐藏
+Base.prototype.hide = function(className){
+    for(var i=0;i<this.elements.length;i++){
+        this.elements[i].style.display = 'none';
+    }
+    return this;
+}
+//设置鼠标移入移出
+Base.prototype.hover = function(over,out){
+    for(var i=0;i<this.elements.length;i++){
+        this.elements[i].onmouseover = over;
+        this.elements[i].onmouseout = out;
+    }
+    return this;
+}
+//设置对象水平和垂直居中
+Base.prototype.center = function(width,height){
+    for(var i=0;i<this.elements.length;i++){
+        this.elements[i].style.top = (document.documentElement.clientHeight - height)/2 + 'px';
+        this.elements[i].style.left = (document.documentElement.clientWidth - width)/2 + 'px';
+    }
+    return this;
+}
+//浏览器窗口大小改变
+Base.prototype.resize = function(fn){
+    window.onresize = fn;
+    return this;
+}
+//锁屏方法
+Base.prototype.lock = function(){
+    for(var i=0;i<this.elements.length;i++){
+        this.elements[i].style.display = 'block';
+    }
+    return this;
+}
+//解锁屏方法
+Base.prototype.unlock = function(){
+    for(var i=0;i<this.elements.length;i++){
+        this.elements[i].style.display = 'none';
+    }
+    return this;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
