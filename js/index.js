@@ -25,18 +25,33 @@ window.onload = function(){
     },function(){
         $().getClass('links-list').hide();
     });
-    //弹出框调试
-    $().getClass('links-insert').getElement(0).click(function(){
+    //后台登录弹出框调试
+    $().getClass('links-login').getElement(0).click(function(){
         $().getId('mask').lock();
         $().getId('link-login').center(400,180).show();
     });
     $().getClass('link-close').getElement(0).click(function(){
         $().getId('mask').unlock();
-        $().getId('link-login').center(400,180).hide();
+        $().getId('link-login').hide();
     });
     $().getId('link-login').center(400,180).resize(function(){
         $().getId('link-login').center(400,180);
     });
+    $().getId('link-login').drag();
+    //加入书签弹出框调试
+    $().getClass('links-insert').getElement(0).click(function(){
+        $().getId('mask').lock();
+        $().getId('link-book').center(400,180).show();
+    });
+    $().getClass('link-close').getElement(1).click(function(){
+        $().getId('mask').unlock();
+        $().getId('link-book').hide();
+    });
+    $().getId('link-book').center(400,180).resize(function(){
+        $().getId('link-book').center(400,180);
+    });
+    $().getId('link-book').drag();
+    
 }
 
  

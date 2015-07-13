@@ -215,14 +215,14 @@ Base.prototype.removeClass = function(className){
     return this;
 }
 //设置显示
-Base.prototype.show = function(className){
+Base.prototype.show = function(){
     for(var i=0;i<this.elements.length;i++){
         this.elements[i].style.display = 'block';
     }
     return this;
 }
 //设置隐藏
-Base.prototype.hide = function(className){
+Base.prototype.hide = function(){
     for(var i=0;i<this.elements.length;i++){
         this.elements[i].style.display = 'none';
     }
@@ -263,7 +263,59 @@ Base.prototype.unlock = function(){
     }
     return this;
 }
+//拖拽事件
+Base.prototype.drag = function(){
+    for(var i=0;i<this.elements.length;i++){
+		addEvent(this.elements[i], 'mousedown', function (e) {
+			if (trim(this.innerHTML).length == 0) e.preventDefault();
+            var e = getEvent(e);
+            var _this = this;
+            var diffX = e.clientX - _this.offsetLeft;
+            var diffY = e.clientY - _this.offsetTop;
 
+            if(e.target.tagName == 'h2'){
+                addEvent(document,'mousemove',move);
+                addEvent(document,'mouseup',up);
+            }else{
+                removeEvent(document,'mousemove',move);
+                removeEvent(document,'mouseup',up);
+            }
+            
+            function move(e){
+                var e = getEvent(e);
+                var left = e.clientX - diffX;
+                var top = e.clientY - diffY;
+                
+                //设置不允许超过视口边缘
+                if(left < 0 ){
+                    left = 0;
+                }else if(left > getInner().width - _this.offsetWidth){
+                    left = getInner().width - _this.offsetWidth;
+                }
+                if(top < 0 ){
+                    top = 0;
+                }else if(top > getInner().height - _this.offsetHeight){
+                    top = getInner().height - _this.offsetHeight;
+                }
+                
+                _this.style.left = left + 'px';
+                _this.style.top = top + 'px';
+                
+                if(typeof _this.setCapture != 'undefined'){
+                    _this.setCapture;
+                }
+            }
+            function up(){
+                this.onmousemove = null;
+                this.onmouseup = null;
+                if(typeof _this.releaseCapture != 'undefined'){
+                    _this.releaseCapture;
+                }
+            }
+        });
+    }
+    return this;
+}
 
 
 
