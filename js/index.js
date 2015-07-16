@@ -9,6 +9,7 @@ window.onload = function(){
  
 /* 连缀写法封装调试 */
 window.onload = function(){
+/* 
     $().getId('footer').css('color','red').html('smarterjs').click(function(){
         //alert(this.innerHTML);
         //alert($().getId('footer').html());//对html函数的进一步封装
@@ -52,6 +53,47 @@ window.onload = function(){
     });
     $().getId('link-book').drag();
     
+ */
+    //alert($('#footer').html());
+    //$('#footer').css('color','red').html('smarterjs');
+    //$('.layout').css('background','red');
+    //$('p').css('color','red');//问题
+    //$('#content').find('.section').css('color','red');
+    //$('#article').find('p').css('color','red');
+    //$('.section').find('p').css('color','green');
+    
+    //下拉菜单调试
+    $('.links-me').hover(function(){
+        $('.links-list').show();
+    },function(){
+        $('.links-list').hide();
+    });
+    //后台登录弹出框调试
+    $('.links-login').click(function(){
+        $('#mask').lock();
+        $('#link-login').center(400,180).show();
+    });
+    $('.link-close').eq(0).click(function(){
+        $('#mask').unlock();
+        $('#link-login').hide();
+    });
+    $('#link-login').center(400,180).resize(function(){
+        $('#link-login').center(400,180);
+    });
+    $('#link-login').drag();
+    //加入书签弹出框调试
+    $('.links-insert').click(function(){
+        $('#mask').lock();
+        $('#link-book').center(400,180).show();
+    });
+    $('.link-close').eq(1).click(function(){
+        $('#mask').unlock();
+        $('#link-book').hide();
+    });
+    $('#link-book').center(400,180).resize(function(){
+        $('#link-book').center(400,180);
+    });
+    $('#link-book').drag();
 }
 
  

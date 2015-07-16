@@ -147,12 +147,50 @@ function scrollTop(){
     document.body.scrollTop = 0;
 }
 
+/* //浏览器类型检测，下面用简写
+(function(){
+    window.sys = {};
+    var ua = navigator.userAgent.toLowerCase();//获取浏览器信息字符串
+    var s;
+    
+    //alert(ua);
+    if((/msie ([\d.]+)/).test(ua)){
+        s = ua.match(/msie ([\d.]+)/);
+        alert(s);
+    }
+    if((/firefox\/([\d.]+)/).test(ua)){
+        s = ua.match(/firefox\/([\d.]+)/);
+        alert(s);
+    }
+    if((/chrome\/([\d.]+)/).test(ua)){
+        s = ua.match(/chrome\/([\d.]+)/);
+        alert(s);
+    }
+    if((/opera\/.*version\/([\d.]+)/).test(ua)){
+        s = ua.match(/opera\/.*version\/([\d.]+)/);
+        alert(s);
+    }
+    if((/version\/([\d.]+).*safari/).test(ua)){
+        s = ua.match(/version\/([\d.]+).*safari/);
+        alert(s);
+    }
+    
+})();
 
+ */
 
-
-
-
-
+//浏览器特性检测
+(function(){
+    window.sys = {};
+    //获取浏览器信息字符串
+    var ua = navigator.userAgent.toLowerCase();
+    var s;
+    (s=ua.match(/msie ([\d.]+)/))?sys.ie = s[1]:
+    (s=ua.match(/firefox\/([\d.]+)/))?sys.firefox = s[1]:
+    (s=ua.match(/chrome\/([\d.]+)/))?sys.chrome = s[1]:
+    (s=ua.match(/opera\/.*version\/([\d.]+)/))?sys.opera = s[1]:
+    (s=ua.match(/version\/([\d.]+).*safari/))?sys.safari = s[1]:0;
+})();
 
 
 

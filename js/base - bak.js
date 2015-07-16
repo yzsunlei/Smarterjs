@@ -106,88 +106,13 @@ Base.prototype.html = function(str){
 }
  */
 
- /*可以通过 $('#header p') 来获取元素的
-//基础库
-function Base(args) {
-	//创建一个数组，来保存获取的节点和节点数组
-	this.elements = [];
-	
-	if (typeof args == 'string') {
-		//css模拟
-		if (args.indexOf(' ') != -1) {
-			var elements = args.split(' ');			//把节点拆开分别保存到数组里
-			var childElements = [];					//存放临时节点对象的数组，解决被覆盖的问题
-			var node = [];								//用来存放父节点用的
-			for (var i = 0; i < elements.length; i ++) {
-				if (node.length == 0) node.push(document);		//如果默认没有父节点，就把document放入
-				switch (elements[i].charAt(0)) {
-					case '#' :
-						childElements = [];				//清理掉临时节点，以便父节点失效，子节点有效
-						childElements.push(this.getId(elements[i].substring(1)));
-						node = childElements;		//保存父节点，因为childElements要清理，所以需要创建node数组
-						break;
-					case '.' : 
-						childElements = [];
-						for (var j = 0; j < node.length; j ++) {
-							var temps = this.getClass(elements[i].substring(1), node[j]);
-							for (var k = 0; k < temps.length; k ++) {
-								childElements.push(temps[k]);
-							}
-						}
-						node = childElements;
-						break;
-					default : 
-						childElements = [];
-						for (var j = 0; j < node.length; j ++) {
-							var temps = this.getTagName(elements[i], node[j]);
-							for (var k = 0; k < temps.length; k ++) {
-								childElements.push(temps[k]);
-							}
-						}
-						node = childElements;
-				}
-			}
-			this.elements = childElements;
-		} else {
-			//find模拟
-			switch (args.charAt(0)) {
-				case '#' :
-					this.elements.push(this.getId(args.substring(1)));
-					break;
-				case '.' : 
-					this.elements = this.getClass(args.substring(1));
-					break;
-				default : 
-					this.elements = this.getTagName(args);
-			}
-		}
-	} else if (typeof args == 'object') {
-		if (args != undefined) {    //_this是一个对象，undefined也是一个对象，区别与typeof返回的带单引号的'undefined'
-			this.elements[0] = args;
-		}
-	}
-} */
  
 //基础库定义--将所有方法置于外面
 function Base(oneElements){
     //存放获取的节点数组
     this.elements = [];
-    
-    if(typeof oneElements == 'string'){
-        switch(oneElements.charAt(0)){
-            case '#':
-                this.elements.push(this.getId(oneElements.substring(1)));
-                break;
-            case '.':
-                this.elements = this.getClass(oneElements.substring(1));
-                break;
-            default:
-                this.elements = this.getTag(oneElements);
-        }
-    }else if(typeof oneElements == 'object'){
-        if(oneElements != undefined){
-            this.elements[0] = oneElements;
-        }
+    if(oneElements != undefined){
+        this.elements[0] = oneElements;
     }
 }
 //简化调用
@@ -196,22 +121,16 @@ var $ = function(oneElements){
 }
 //通过ID获取元素
 Base.prototype.getId = function(id){
-    return document.getElementById(id);
+    this.elements.push(document.getElementById(id));
+    return this;
 }
 //通过标签名获取元素
-Base.prototype.getTag = function(tag,parentNode){
-    var node = null;
-    var temps = [];
-    if(parentNode != undefined){
-        node = parentNode;
-    }else{
-        node = document;
-    }
-    var tags = node.getElementsByTagName(tag);
+Base.prototype.getTag = function(tag){
+    var tags = document.getElementsByTagName(tag);
     for(var i=0;i<tags.length;i++){
-        temps.push(tags[i]);
+        this.elements.push(tags[i]);
     }
-    return temps;
+    return this;
 }
 //通过元素名称获取元素
 Base.prototype.getName = function(name){
@@ -222,52 +141,23 @@ Base.prototype.getName = function(name){
     return this;
 }
 //通过类名获取元素
-Base.prototype.getClass = function(className,parentNode){
+Base.prototype.getClass = function(className,idName){
     var node = null;
-    var temps =[];
-    if(parentNode != undefined){
-        node = parentNode;
+    if(arguments.length == 2){
+        node = document.getElementById(idName);
     }else{
         node = document;
     }
     var all = node.getElementsByTagName('*');
     for(var i=0;i<all.length;i++){
         if(all[i].className == className){
-            temps.push(all[i]);
+            this.elements.push(all[i]);
         }
     }
-    return temps;
-}
-//设置CSS选择器子节点
-Base.prototype.find = function(str){
-    var childElements = [];
-    for(var i=0;i<this.elements.length;i++){
-        switch(str.charAt(0)){
-            case '#':
-                childElements.push(this.getId(str.substring(1)));
-                break;
-            case '.':
-                var temps = this.getClass(str.substring(1),this.elements[i]);
-                for(var j=0;j<temps.length;j++){
-                    childElements.push(temps[j]);
-                }
-                break;
-            default :
-                var temps = this.getTag(str,this.elements[i]);
-                for(var j=0;j<temps.length;j++){
-                    childElements.push(temps[j]);
-                }
-        }
-    }
-    this.elements = childElements;
     return this;
 }
-
-//通过元素数组序号获取这个节点对象
+//通过元素数组序号获取单个元素
 Base.prototype.getElement = function(num){
-    return this.elements[num];
-}
-Base.prototype.eq = function(num){
     var element = this.elements[num];
     this.elements = [];
     this.elements[0] = element;
